@@ -111,7 +111,20 @@ public class MenuManager : Singleton<MenuManager>
     {
         volumeSliders.Add("Master", masterVolSlider);
         volumeSliders.Add("SFX", sfxVolSlider);
-        volumeSliders.Add("Music", musicVolSlider);        
+        volumeSliders.Add("Music", musicVolSlider);
+
+        foreach (var key in volumeSliders.Keys)
+        {
+            float savedValue = PlayerPrefs.GetFloat(key, defaultVolume);
+            volumeSliders[key].value = savedValue;
+            volumeSliders[key].onValueChanged.AddListener((value) => OnVolumeChanged(key, value));
+            UpdateVolumeUI(key, savedValue);
+
+            if (AudioManager.Instance != null)
+            {
+                AudioManager.Instance.SetMixerVolume(key, savedValue);
+            }
+        }
     }
 
     private void InitializeTexts()
