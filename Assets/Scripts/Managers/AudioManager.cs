@@ -1,0 +1,85 @@
+using System.Collections.Generic;
+using UnityEngine;
+using UnityEngine.Audio;
+
+public class AudioManager : Singleton<AudioManager>
+{
+    private Queue<AudioSource> threeDAudioPool;
+    private Queue<AudioSource> twoDAudioPool;
+
+    [SerializeField] private AudioSource threeDTemplate;
+    [SerializeField] private AudioSource twoDTemplate;
+    [SerializeField] private int numberOfPool = 15;
+    [SerializeField] private AudioMixer mixer;
+
+    public GameStateManager gsm;
+    public MenuManager mm;
+
+    public void Initialize(GameStateManager gameStateManager, MenuManager menuManager)
+    {
+        this.gsm = gameStateManager;
+        this.mm = menuManager;
+    }
+
+    protected override void Awake()
+    {
+        base.Awake();
+
+        threeDAudioPool = new Queue<AudioSource>();
+        twoDAudioPool = new Queue<AudioSource>();
+
+        for (int i = 0; i < numberOfPool; i++)
+        {
+            AudioSource threeD = Instantiate(threeDTemplate, transform);
+            threeDAudioPool.Enqueue(threeD);
+
+            AudioSource twoD = Instantiate(twoDTemplate, transform);
+            twoDAudioPool.Enqueue(twoD);
+        }
+    }
+
+    public AudioSource GetTwoDimensionalSource()
+    {
+        AudioSource source = twoDAudioPool.Dequeue();
+        twoDAudioPool.Enqueue(source);
+        return source;
+    }
+
+    public void PlayAudioSFX(AudioClip clip)
+    {
+        AudioSource source = GetTwoDimensionalSource();
+        source.clip = clip;
+        source.Play();
+    }
+
+    public AudioSource GetThreeDimensionalSource(Vector3 origin)
+    {
+        if (threeDAudioPool.Count <= 0)
+        {
+            AudioSource threeD = Instantiate(threeDTemplate, transform);
+            threeDAudioPool.Enqueue(threeD);
+        }
+
+        AudioSource source = threeDAudioPool.Dequeue();
+        //threeDAudioPool.Enqueue(source);
+        source.transform.position = origin;
+        return source;
+    }
+
+    public void ReturnAudioSourceToPool(AudioSource source)
+    {
+        source.transform.SetParent(transform);
+
+        source.pitch = 1;
+        source.volume = 1;
+
+        threeDAudioPool.Enqueue(source);
+    }
+
+    public void SetMixerVolume(string name, float value)
+    {
+        mixer.SetFloat(name, Mathf.Log10(value) * 20);
+        PlayerPrefs.SetFloat(name, value);
+        PlayerPrefs.Save();
+    }
+}
