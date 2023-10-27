@@ -8,11 +8,6 @@ public class InputManager : Singleton<InputManager>
     public GameStateManager gsm;
     public GameState CurrentState { get; private set; }
 
-    public void Initialize(GameStateManager gameStateManager)
-    {
-        this.gsm = gameStateManager;
-    }
-
     protected override void Awake()
     {
         base.Awake();

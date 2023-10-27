@@ -7,11 +7,6 @@ public class SceneManager : Singleton<SceneManager>
 {
     private GameStateManager gsm;
 
-    public void Initialize(GameStateManager gameStateManager)
-    {
-        this.gsm = gameStateManager;
-    }
-
     public void LoadScene(string sceneName)
     {
         UnityEngine.SceneManagement.SceneManager.LoadScene(sceneName);

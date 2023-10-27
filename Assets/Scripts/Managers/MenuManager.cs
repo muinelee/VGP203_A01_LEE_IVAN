@@ -42,69 +42,21 @@ public class MenuManager : Singleton<MenuManager>
     private const float defaultVolume = 0.75f;
     private const float volumeStep = 0.1f;
 
-    private GameStateManager gsm;
-    private InputManager im;
-    private SceneManager sm;
-    private AudioManager am;
-
-    public void Initialize(AudioManager audioManager, GameStateManager gameStateManager, InputManager inputManager, SceneManager sceneManager)
-    {
-        this.am = audioManager;
-        this.gsm = gameStateManager;
-        this.im = inputManager;
-        this.sm = sceneManager;
-
-        mainMenu.SetActive(true);
-        settingsMenu.SetActive(false);
-        pauseMenu.SetActive(false);
-        gameOverMenu.SetActive(false);
-
-        gsm.OnStateChanged += HandleGameStateChange;
-
-        foreach (var key in volumeSliders.Keys)
-        {
-            float savedValue = PlayerPrefs.GetFloat(key, defaultVolume);
-            volumeSliders[key].value = savedValue;
-            volumeSliders[key].onValueChanged.AddListener((value) => OnVolumeChanged(key, value));
-            UpdateVolumeUI(key, savedValue);
-
-            if (AudioManager.Instance != null)
-            {
-                AudioManager.Instance.SetMixerVolume(key, savedValue);
-            }
-        }
-    }
-
-    private void HandleGameStateChange(GameState newState)
-    {
-        switch (newState)
-        {
-            case GameState.Playing:
-                // Hide all menus or do something else
-                break;
-            case GameState.Paused:
-                // Show the pause menu
-                break;
-            case GameState.GameOver:
-                // Show the game-over menu
-                break;
-            default:
-                break;
-        }
-    }
-
     // Start is called before the first frame update
     protected override void Awake()
     {
         base.Awake();
 
-        if(!gsm) gsm = GetComponent<GameStateManager>();
-        if(!im) im = GetComponent<InputManager>();
-        if(!sm) sm = GetComponent<SceneManager>();
-
-        InitializeVolumeSliders();
         InitializeTexts();
+        InitializeVolumeSliders();
         InitializeButtons();
+    }
+
+    private void InitializeTexts()
+    {
+        volumeTexts.Add("Master", masterVolSliderText);
+        volumeTexts.Add("SFX", sfxVolSliderText);
+        volumeTexts.Add("Music", musicVolSliderText);
     }
     
     private void InitializeVolumeSliders()
@@ -116,8 +68,8 @@ public class MenuManager : Singleton<MenuManager>
         foreach (var key in volumeSliders.Keys)
         {
             float savedValue = PlayerPrefs.GetFloat(key, defaultVolume);
-            volumeSliders[key].value = savedValue;
             volumeSliders[key].onValueChanged.AddListener((value) => OnVolumeChanged(key, value));
+            volumeSliders[key].value = savedValue;
             UpdateVolumeUI(key, savedValue);
 
             if (AudioManager.Instance != null)
@@ -127,19 +79,12 @@ public class MenuManager : Singleton<MenuManager>
         }
     }
 
-    private void InitializeTexts()
-    {
-        volumeTexts.Add("Master", masterVolSliderText);
-        volumeTexts.Add("SFX", sfxVolSliderText);
-        volumeTexts.Add("Music", musicVolSliderText);
-    }
-
-        private void InitializeButtons()
+    private void InitializeButtons()
     {
         // Button Settings
         if (playButton)
         {
-            playButton.onClick.AddListener(() => sm.LoadScene("PlayScene"));
+            playButton.onClick.AddListener(Play);
         }
         if (settingsButton)
         {
@@ -147,12 +92,22 @@ public class MenuManager : Singleton<MenuManager>
         }
         if (mainMenuButton)
         {
-            mainMenuButton.onClick.AddListener(() => sm.LoadScene("TitleScene"));
+            mainMenuButton.onClick.AddListener(LoadTitleScene);
         }
         if (quitButton)
         {
             quitButton.onClick.AddListener(Quit);
         }
+    }
+
+    private void Play()
+    {
+
+    }
+
+    private void LoadTitleScene()
+    {
+        /*SceneManager.LoadScene("Title");*/
     }
 
     public void OnVolumeChanged(string type, float value)
@@ -173,6 +128,7 @@ public class MenuManager : Singleton<MenuManager>
         {
             value = Mathf.Round(value / volumeStep) * volumeStep;
             volumeTexts[type].text = (value * 100).ToString() + "%";
+            Debug.Log(value);
         }
     }
 

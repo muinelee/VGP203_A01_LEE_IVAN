@@ -12,15 +12,6 @@ public class AudioManager : Singleton<AudioManager>
     [SerializeField] private int numberOfPool = 15;
     [SerializeField] private AudioMixer mixer;
 
-    public GameStateManager gsm;
-    public MenuManager mm;
-
-    public void Initialize(GameStateManager gameStateManager, MenuManager menuManager)
-    {
-        this.gsm = gameStateManager;
-        this.mm = menuManager;
-    }
-
     protected override void Awake()
     {
         base.Awake();
@@ -78,8 +69,8 @@ public class AudioManager : Singleton<AudioManager>
 
     public void SetMixerVolume(string name, float value)
     {
-        mixer.SetFloat(name, Mathf.Log10(value) * 20);
         PlayerPrefs.SetFloat(name, value);
+        mixer.SetFloat(name, Mathf.Log10(value) * 20);
         PlayerPrefs.Save();
     }
 }

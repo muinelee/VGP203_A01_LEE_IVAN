@@ -1,5 +1,6 @@
 using UnityEngine;
 
+[DefaultExecutionOrder(-1)]
 public class Singleton<T> : MonoBehaviour where T : Component
 {
     static T instance;
@@ -17,7 +18,6 @@ public class Singleton<T> : MonoBehaviour where T : Component
                 GameObject obj = new GameObject();
                 obj.name = typeof(T).Name;
                 instance = obj.AddComponent<T>();
-                DontDestroyOnLoad(obj);
             }
             return instance;
         }
@@ -29,10 +29,8 @@ public class Singleton<T> : MonoBehaviour where T : Component
         {
             instance = this as T;
             DontDestroyOnLoad(gameObject);
+            return;
         }
-        else if (instance != this)
-        {
-            Destroy(gameObject);
-        }
+        Destroy(gameObject);
     }
 }
