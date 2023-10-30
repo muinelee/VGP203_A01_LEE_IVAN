@@ -15,6 +15,7 @@ public class AudioManager : Singleton<AudioManager>
     protected override void Awake()
     {
         base.Awake();
+        InitializeMixer();
 
         threeDAudioPool = new Queue<AudioSource>();
         twoDAudioPool = new Queue<AudioSource>();
@@ -27,6 +28,23 @@ public class AudioManager : Singleton<AudioManager>
             AudioSource twoD = Instantiate(twoDTemplate, transform);
             twoDAudioPool.Enqueue(twoD);
         }
+    }
+
+    private void OnEnable()
+    {
+        SettingsManager.Instance.OnSettingsChanged += InitializeMixer;
+    }
+
+    private void OnDisable()
+    {
+        SettingsManager.Instance.OnSettingsChanged -= InitializeMixer;
+    }
+
+    public void InitializeMixer()
+    {
+        SetMixerVolume("Master", SettingsManager.Instance.MasterVolume);
+        SetMixerVolume("SFX", SettingsManager.Instance.SFXVolume);
+        SetMixerVolume("Music", SettingsManager.Instance.MusicVolume);
     }
 
     public AudioSource GetTwoDimensionalSource()
@@ -69,8 +87,6 @@ public class AudioManager : Singleton<AudioManager>
 
     public void SetMixerVolume(string name, float value)
     {
-        PlayerPrefs.SetFloat(name, value);
         mixer.SetFloat(name, Mathf.Log10(value) * 20);
-        PlayerPrefs.Save();
     }
 }

@@ -1,15 +1,10 @@
-using System.Collections;
-using System.Collections.Generic;
+using System;
 using UnityEngine;
 using UnityEngine.UI;
-using UnityEngine.SceneManagement;
-using UnityEngine.InputSystem;
-using System;
 using TMPro;
-using static UnityEngine.EventSystems.EventTrigger;
-using UnityEngine.TextCore.Text;
+using UnityEngine.SceneManagement;
 
-public class MenuManager : Singleton<MenuManager>
+public class MenuManager : MonoBehaviour
 {
     [Header("Menus")]
     [SerializeField] private GameObject mainMenu;
@@ -17,133 +12,213 @@ public class MenuManager : Singleton<MenuManager>
     [SerializeField] private GameObject pauseMenu;
     [SerializeField] private GameObject gameOverMenu;
 
-    [Header("Buttons")]
-    [SerializeField] private Button playButton;
-    [SerializeField] private Button settingsButton;
-    [SerializeField] private Button mainMenuButton;
-    [SerializeField] private Button resumeGame;
-    [SerializeField] private Button quitButton;
-    //[SerializeField] private Button saveButton;
-    //[SerializeField] private Button loadButton;
+    [Header("Main Menu Buttons")]
+    [SerializeField] private Button mm_PlayButton;
+    [SerializeField] private Button mm_SettingsButton;
+    [SerializeField] private Button mm_QuitButton;
+
+    [Header("Pause Menu Buttons")]
+    [SerializeField] private Button pm_ResumeButton;
+    [SerializeField] private Button pm_SettingsButton;
+    [SerializeField] private Button pm_MainMenuButton;
+    [SerializeField] private Button pm_QuitButton;
+
+    [Header("GameOver Menu Buttons")]
+    [SerializeField] private Button go_RestartButton;
+    [SerializeField] private Button go_SettingsButton;
+    [SerializeField] private Button go_MainMenuButton;
+    [SerializeField] private Button go_QuitButton;
+
+    [Header("Settings Menu Buttons, Sliders, Texts")]
+    [SerializeField] private Button closeButton;
 
     [Header("Sliders")]
     [SerializeField] private Slider masterVolSlider;
     [SerializeField] private Slider sfxVolSlider;
     [SerializeField] private Slider musicVolSlider;
-    [SerializeField] private Dictionary<string, Slider> volumeSliders = new Dictionary<string, Slider>();
 
     [Header("Texts")]
-    [SerializeField] private TMP_Text masterVolSliderText;
-    [SerializeField] private TMP_Text sfxVolSliderText;
-    [SerializeField] private TMP_Text musicVolSliderText;
-    [SerializeField] private Dictionary<string, TMP_Text> volumeTexts = new Dictionary<string, TMP_Text>();
+    [SerializeField] private TMP_Text masterVolText;
+    [SerializeField] private TMP_Text sfxVolText;
+    [SerializeField] private TMP_Text musicVolText;
 
-    [Header("Volume Defaults")]
-    private const float defaultVolume = 0.75f;
-    private const float volumeStep = 0.1f;
+    private GameObject lastActiveMenu;
 
-    // Start is called before the first frame update
-    protected override void Awake()
+    #region Unity Methods
+    private void Start()
     {
-        base.Awake();
-
-        InitializeTexts();
-        InitializeVolumeSliders();
         InitializeButtons();
+        InitializeSliders();
     }
 
-    private void InitializeTexts()
+    private void OnEnable()
     {
-        volumeTexts.Add("Master", masterVolSliderText);
-        volumeTexts.Add("SFX", sfxVolSliderText);
-        volumeTexts.Add("Music", musicVolSliderText);
+        GameManager.Instance.OnGameStateChanged += HandleGameStateChanged;
     }
-    
-    private void InitializeVolumeSliders()
-    {
-        volumeSliders.Add("Master", masterVolSlider);
-        volumeSliders.Add("SFX", sfxVolSlider);
-        volumeSliders.Add("Music", musicVolSlider);
 
-        foreach (var key in volumeSliders.Keys)
+    private void OnDisable()
+    {
+        GameManager.Instance.OnGameStateChanged -= HandleGameStateChanged;
+    }
+    #endregion
+
+    private void HandleGameStateChanged(GameState newState)
+    {
+        // Initialize menu based on game state
+        switch (newState)
         {
-            float savedValue = PlayerPrefs.GetFloat(key, defaultVolume);
-            volumeSliders[key].onValueChanged.AddListener((value) => OnVolumeChanged(key, value));
-            volumeSliders[key].value = savedValue;
-            UpdateVolumeUI(key, savedValue);
-
-            if (AudioManager.Instance != null)
-            {
-                AudioManager.Instance.SetMixerVolume(key, savedValue);
-            }
+            case GameState.MAIN:
+                ActivateMainMenu();
+                break;
+            case GameState.PLAY:
+                PlayGame();
+                break;
+            case GameState.PAUSE:
+                ActivatePauseMenu();
+                break;
+            case GameState.GAMEOVER:
+                ActivateGameOverMenu();
+                break;
+            default:
+                break;
         }
     }
 
     private void InitializeButtons()
     {
-        // Button Settings
-        if (playButton)
+        mm_PlayButton.onClick.AddListener(PlayGame);
+        mm_SettingsButton.onClick.AddListener(ActivateSettingsMenu);
+        mm_QuitButton.onClick.AddListener(QuitGame);
+
+        pm_ResumeButton.onClick.AddListener(ResumeGame);
+        pm_SettingsButton.onClick.AddListener(ActivateSettingsMenu);
+        pm_MainMenuButton.onClick.AddListener(GoToMainMenu);
+        pm_QuitButton.onClick.AddListener(QuitGame);
+
+        go_RestartButton.onClick.AddListener(PlayGame);
+        go_SettingsButton.onClick.AddListener(ActivateSettingsMenu);
+        go_MainMenuButton.onClick.AddListener(GoToMainMenu);
+        go_QuitButton.onClick.AddListener(QuitGame);
+
+        closeButton.onClick.AddListener(Close);
+    }
+
+    private void InitializeSliders()
+    {
+        // Load saved settings
+        masterVolSlider.value = SettingsManager.Instance.MasterVolume;
+        sfxVolSlider.value = SettingsManager.Instance.SFXVolume;
+        musicVolSlider.value = SettingsManager.Instance.MusicVolume;
+
+        // Initialize slider texts
+        UpdateSliderText(masterVolSlider.value, masterVolText);
+        UpdateSliderText(sfxVolSlider.value, sfxVolText);
+        UpdateSliderText(musicVolSlider.value, musicVolText);
+
+        // Subscribe to slider value changes
+        masterVolSlider.onValueChanged.AddListener(value => SetVolume(value, masterVolText, "Master"));
+        sfxVolSlider.onValueChanged.AddListener(value => SetVolume(value, sfxVolText, "SFX"));
+        musicVolSlider.onValueChanged.AddListener(value => SetVolume(value, musicVolText, "Music"));
+    }
+
+    private void UpdateSliderText(float value, TMP_Text text)
+    {
+        text.text = (value * 100).ToString("0");
+    }
+
+    private void SetVolume(float value, TMP_Text text, string name)
+    {
+        // Update the text
+        UpdateSliderText(value, text);
+
+        // Save the settings
+        SettingsManager.Instance.SaveVolumeSettings(masterVolSlider.value, sfxVolSlider.value, musicVolSlider.value);
+    }
+
+    private void HideAllMenus()
+    {
+        mainMenu.SetActive(false);
+        settingsMenu.SetActive(false);
+        pauseMenu.SetActive(false);
+    }
+
+    private void ActivateMainMenu()
+    {
+        mainMenu.SetActive(true);
+        settingsMenu.SetActive(false);
+        pauseMenu.SetActive(false);
+    }
+
+    private void ActivateSettingsMenu()
+    {
+        if (mainMenu.activeSelf)
         {
-            playButton.onClick.AddListener(Play);
+            lastActiveMenu = mainMenu;
+            ToggleMenu(mainMenu, settingsMenu);
         }
-        if (settingsButton)
+        else if (pauseMenu.activeSelf)
         {
-            settingsButton.onClick.AddListener(() => ToggleMenu(mainMenu, settingsMenu));
-        }
-        if (mainMenuButton)
-        {
-            mainMenuButton.onClick.AddListener(LoadTitleScene);
-        }
-        if (quitButton)
-        {
-            quitButton.onClick.AddListener(Quit);
+            lastActiveMenu = pauseMenu;
+            ToggleMenu(pauseMenu, settingsMenu);
         }
     }
 
-    private void Play()
+    private void Close()
     {
-
-    }
-
-    private void LoadTitleScene()
-    {
-        /*SceneManager.LoadScene("Title");*/
-    }
-
-    public void OnVolumeChanged(string type, float value)
-    {
-        if (volumeTexts.ContainsKey(type))
+        if (settingsMenu.activeSelf && lastActiveMenu != null)
         {
-            UpdateVolumeUI(type, value);
-        }
-        if (AudioManager.Instance != null)
-        {
-            AudioManager.Instance.SetMixerVolume(type, value);
+            ToggleMenu(settingsMenu, lastActiveMenu);        
         }
     }
 
-    public void UpdateVolumeUI(string type, float value)
+    private void ActivatePauseMenu()
     {
-        if (volumeTexts.ContainsKey(type))
+        if (SceneManager.GetActiveScene().name == "PlayScene")
         {
-            value = Mathf.Round(value / volumeStep) * volumeStep;
-            volumeTexts[type].text = (value * 100).ToString() + "%";
-            Debug.Log(value);
+            pauseMenu.SetActive(true);
         }
     }
 
-    private void ToggleMenu(GameObject currentMenu, GameObject nextMenu)
+    private void ActivateGameOverMenu()
     {
-        currentMenu.SetActive(false);
-        nextMenu.SetActive(true);
+        gameOverMenu.SetActive(true);
     }
 
-    private void Quit()
+    private void PlayGame()
     {
+        if (GameManager.Instance.CurrentGameState == GameState.PLAY)
+        {
+            HideAllMenus();
+        }
+        else if (GameManager.Instance.CurrentGameState == GameState.MAIN)
+        {
+            GameManager.Instance.LoadPlayScene();
+        }
+    }
+
+    private void ResumeGame()
+    {
+        GameManager.Instance.TogglePause();
+    }
+
+    private void GoToMainMenu()
+    {
+        GameManager.Instance.LoadTitleScene();
+    }
+
+    private void QuitGame()
+    {
+        // Quit game logic
 #if UNITY_EDITOR
         UnityEditor.EditorApplication.isPlaying = false;
 #else
         Application.Quit();
 #endif
+    }
+
+    private void ToggleMenu(GameObject off, GameObject on)
+    {
+        off.SetActive(false);
+        on.SetActive(true);
     }
 }
