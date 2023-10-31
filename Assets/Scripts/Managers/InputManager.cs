@@ -5,7 +5,6 @@ using UnityEngine.InputSystem;
 
 public class InputManager : Singleton<InputManager>
 {
-    private GameManager gm;
     [HideInInspector] public PlayerInputActions input;
 
     protected override void Awake()
@@ -16,7 +15,6 @@ public class InputManager : Singleton<InputManager>
 
     private void OnEnable()
     {
-        gm = GameManager.Instance;
         input.Enable();
         input.UI.Pause.performed += ctx => OnPause(ctx);
         input.UI.Pause.canceled += ctx => OnPause(ctx);
@@ -33,7 +31,7 @@ public class InputManager : Singleton<InputManager>
     {
         if (ctx.performed)
         {
-            gm.TogglePause();
+            GameManager.Instance.TogglePause();
         }
     }
 }

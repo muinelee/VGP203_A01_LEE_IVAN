@@ -62,10 +62,10 @@ public class MenuManager : MonoBehaviour
     }
     #endregion
 
-    private void HandleGameStateChanged(GameState newState)
+    private void HandleGameStateChanged()
     {
         // Initialize menu based on game state
-        switch (newState)
+        switch (GameManager.Instance.CurrentGameState)
         {
             case GameState.MAIN:
                 ActivateMainMenu();

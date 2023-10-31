@@ -16,12 +16,12 @@ public class SettingsManager : Singleton<SettingsManager>
         base.Awake();
     }
 
-    public void Start()
+    private void Start()
     {
-        LoadVolumeSettings();        
+        LoadVolumeSettings();
     }
 
-    public void LoadVolumeSettings()
+    private void LoadVolumeSettings()
     {
         MasterVolume = PlayerPrefs.GetFloat("Master", 0.5f);
         SFXVolume = PlayerPrefs.GetFloat("SFX", 0.5f);

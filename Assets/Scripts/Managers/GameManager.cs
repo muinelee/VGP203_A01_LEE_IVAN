@@ -12,7 +12,7 @@ public enum GameState
 
 public class GameManager : Singleton<GameManager>
 {
-    public event Action<GameState> OnGameStateChanged;
+    public event Action OnGameStateChanged;
     private GameState _currentGameState;
 
     public GameState CurrentGameState
@@ -23,7 +23,7 @@ public class GameManager : Singleton<GameManager>
             if (_currentGameState != value)
             {
                 _currentGameState = value;
-                OnGameStateChanged?.Invoke(value);
+                OnGameStateChanged?.Invoke();
             }
         }
     }
