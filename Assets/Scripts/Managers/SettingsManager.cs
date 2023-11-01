@@ -11,11 +11,6 @@ public class SettingsManager : Singleton<SettingsManager>
 
     public event Action OnSettingsChanged;
 
-    protected override void Awake()
-    {
-        base.Awake();
-    }
-
     private void Start()
     {
         LoadVolumeSettings();

@@ -6,6 +6,14 @@ using UnityEngine.SceneManagement;
 
 public class MenuManager : MonoBehaviour
 {
+    [Header("HUD")]
+    [SerializeField] private GameObject hud;
+
+    [Header("HUD Elements")]
+    [SerializeField] private Slider powerGaugeSlider;
+    [SerializeField] private TMP_Text remainingProjectilesText;
+    [SerializeField] private TMP_Text remainingEnemiesText;
+
     [Header("Menus")]
     [SerializeField] private GameObject mainMenu;
     [SerializeField] private GameObject settingsMenu;
@@ -121,6 +129,23 @@ public class MenuManager : MonoBehaviour
         musicVolSlider.onValueChanged.AddListener(value => SetVolume(value, musicVolText, "Music"));
     }
 
+    public void SetPowerGauge(float value, float min, float max)
+    {
+        powerGaugeSlider.minValue = min;
+        powerGaugeSlider.maxValue = max;
+        powerGaugeSlider.value = value;
+    }
+
+    public void UpdateProjectiles(int remainingProjectiles)
+    {
+        remainingProjectilesText.text = "X" + remainingProjectiles.ToString();
+    }
+
+    public void UpdateEnemies(int remainingEnemies)
+    {
+        remainingEnemiesText.text = "X" + remainingEnemies.ToString();
+    }
+
     private void UpdateSliderText(float value, TMP_Text text)
     {
         text.text = (value * 100).ToString("0");
@@ -140,6 +165,7 @@ public class MenuManager : MonoBehaviour
         mainMenu.SetActive(false);
         settingsMenu.SetActive(false);
         pauseMenu.SetActive(false);
+        hud.SetActive(false);
     }
 
     private void ActivateMainMenu()
@@ -161,6 +187,11 @@ public class MenuManager : MonoBehaviour
             lastActiveMenu = pauseMenu;
             ToggleMenu(pauseMenu, settingsMenu);
         }
+        else if (gameOverMenu.activeSelf)
+        {
+            lastActiveMenu = gameOverMenu;
+            ToggleMenu(gameOverMenu, settingsMenu);
+        }
     }
 
     private void Close()
@@ -176,12 +207,17 @@ public class MenuManager : MonoBehaviour
         if (SceneManager.GetActiveScene().name == "PlayScene")
         {
             pauseMenu.SetActive(true);
+            hud.SetActive(false);
         }
     }
 
     private void ActivateGameOverMenu()
     {
-        gameOverMenu.SetActive(true);
+        if (GameManager.Instance.CurrentGameState == GameState.GAMEOVER)
+        {
+            gameOverMenu.SetActive(true);
+            hud.SetActive(false);
+        }
     }
 
     private void PlayGame()
@@ -189,8 +225,9 @@ public class MenuManager : MonoBehaviour
         if (GameManager.Instance.CurrentGameState == GameState.PLAY)
         {
             HideAllMenus();
+            hud.SetActive(true);
         }
-        else if (GameManager.Instance.CurrentGameState == GameState.MAIN)
+        else if (GameManager.Instance.CurrentGameState == GameState.MAIN || GameManager.Instance.CurrentGameState == GameState.GAMEOVER)
         {
             GameManager.Instance.LoadPlayScene();
         }
@@ -199,6 +236,7 @@ public class MenuManager : MonoBehaviour
     private void ResumeGame()
     {
         GameManager.Instance.TogglePause();
+        hud.SetActive(true);
     }
 
     private void GoToMainMenu()

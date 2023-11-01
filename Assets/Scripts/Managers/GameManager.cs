@@ -12,6 +12,10 @@ public enum GameState
 
 public class GameManager : Singleton<GameManager>
 {
+    [SerializeField] private PlayerController pc;
+    [SerializeField] private MenuManager mm;
+    [SerializeField] private EnemyManager em;
+
     public event Action OnGameStateChanged;
     private GameState _currentGameState;
 
@@ -32,10 +36,6 @@ public class GameManager : Singleton<GameManager>
     protected override void Awake()
     {
         base.Awake();
-    }
-
-    private void OnEnable()
-    {
         SceneManager.sceneLoaded += OnSceneLoaded;
     }
 
@@ -55,11 +55,30 @@ public class GameManager : Singleton<GameManager>
     {
         if (scene.name == "TitleScene")
         {
+            if (pc != null)
+            {
+                pc.OnProjectilesDepleted -= CheckGameOver;
+            }
+
+            if (em != null)
+            {
+                em.OnAllEnemiesDefeated -= CheckGameOver;
+            }
+
             ChangeGameState(GameState.MAIN);
+            Time.timeScale = 1;
         }
         else if (scene.name == "PlayScene")
         {
+            pc = FindObjectOfType<PlayerController>();
+            mm = FindObjectOfType<MenuManager>();
+            em = FindObjectOfType<EnemyManager>();
+
+            pc.OnProjectilesDepleted += CheckGameOver;
+            em.OnAllEnemiesDefeated += CheckGameOver;
+
             ChangeGameState(GameState.PLAY);
+            Time.timeScale = 1;
         }
     }
 
@@ -80,12 +99,34 @@ public class GameManager : Singleton<GameManager>
         if (_currentGameState == GameState.PAUSE)
         {
             Time.timeScale = 1;
-            CurrentGameState = GameState.PLAY;
+            ChangeGameState(GameState.PLAY);
         }
         else if (_currentGameState == GameState.PLAY)
         {
             Time.timeScale = 0;
-            CurrentGameState = GameState.PAUSE;
+            ChangeGameState(GameState.PAUSE);
         }
+    }
+
+    private void CheckGameOver()
+    {
+        Debug.Log("CheckGameOverCalled");
+        Debug.Log("Remaining Projectiles: " + pc.RemainingProjectiles);
+        Debug.Log("Remaining Enemies: " + em.RemainingEnemies);
+
+        if (pc.RemainingProjectiles <=0 || em.RemainingEnemies <= 0)
+        {
+            Debug.Log("GameOver condition met.");
+            GameOver();
+            return;
+        }
+    }
+
+    private void GameOver()
+    {
+        ChangeGameState(GameState.GAMEOVER);
+        Debug.Log("Current Game State: " + CurrentGameState);
+        Time.timeScale = 0;
+        OnGameStateChanged?.Invoke();
     }
 }
