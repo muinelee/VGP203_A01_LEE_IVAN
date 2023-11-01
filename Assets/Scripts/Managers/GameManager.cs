@@ -36,7 +36,11 @@ public class GameManager : Singleton<GameManager>
     protected override void Awake()
     {
         base.Awake();
-        SceneManager.sceneLoaded += OnSceneLoaded;
+    }
+
+    private void OnEnable()
+    {
+        SceneManager.sceneLoaded += OnSceneLoaded;        
     }
 
     private void OnDisable()
@@ -110,13 +114,8 @@ public class GameManager : Singleton<GameManager>
 
     private void CheckGameOver()
     {
-        Debug.Log("CheckGameOverCalled");
-        Debug.Log("Remaining Projectiles: " + pc.RemainingProjectiles);
-        Debug.Log("Remaining Enemies: " + em.RemainingEnemies);
-
         if (pc.RemainingProjectiles <=0 || em.RemainingEnemies <= 0)
         {
-            Debug.Log("GameOver condition met.");
             GameOver();
             return;
         }

@@ -11,12 +11,12 @@ public class SettingsManager : Singleton<SettingsManager>
 
     public event Action OnSettingsChanged;
 
-    private void Start()
+    public void Start()
     {
-        LoadVolumeSettings();
+        LoadVolumeSettings();        
     }
 
-    private void LoadVolumeSettings()
+    public void LoadVolumeSettings()
     {
         MasterVolume = PlayerPrefs.GetFloat("Master", 0.5f);
         SFXVolume = PlayerPrefs.GetFloat("SFX", 0.5f);

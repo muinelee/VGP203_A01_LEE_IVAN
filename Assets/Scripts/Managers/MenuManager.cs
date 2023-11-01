@@ -55,6 +55,7 @@ public class MenuManager : MonoBehaviour
     #region Unity Methods
     private void Start()
     {
+        SettingsManager.Instance.LoadVolumeSettings();
         InitializeButtons();
         InitializeSliders();
     }
@@ -158,6 +159,8 @@ public class MenuManager : MonoBehaviour
 
         // Save the settings
         SettingsManager.Instance.SaveVolumeSettings(masterVolSlider.value, sfxVolSlider.value, musicVolSlider.value);
+
+        AudioManager.Instance.InitializeMixer();
     }
 
     private void HideAllMenus()
