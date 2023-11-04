@@ -124,7 +124,6 @@ public class GameManager : Singleton<GameManager>
     private void GameOver()
     {
         ChangeGameState(GameState.GAMEOVER);
-        Debug.Log("Current Game State: " + CurrentGameState);
         Time.timeScale = 0;
         OnGameStateChanged?.Invoke();
     }
