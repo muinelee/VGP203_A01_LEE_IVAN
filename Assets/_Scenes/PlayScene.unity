@@ -10292,38 +10292,6 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 0}
     m_Modifications:
-    - target: {fileID: 4132928603982516088, guid: adb2fde709f5ea14282e581ea5159101, type: 3}
-      propertyPath: restLength
-      value: 0.5
-      objectReference: {fileID: 0}
-    - target: {fileID: 4132928603982516088, guid: adb2fde709f5ea14282e581ea5159101, type: 3}
-      propertyPath: wheelRadius
-      value: 0.33
-      objectReference: {fileID: 0}
-    - target: {fileID: 4132928603982516088, guid: adb2fde709f5ea14282e581ea5159101, type: 3}
-      propertyPath: springTravel
-      value: 0.2
-      objectReference: {fileID: 0}
-    - target: {fileID: 4132928603982516088, guid: adb2fde709f5ea14282e581ea5159101, type: 3}
-      propertyPath: springStiffness
-      value: 30000
-      objectReference: {fileID: 0}
-    - target: {fileID: 4657263882133084457, guid: adb2fde709f5ea14282e581ea5159101, type: 3}
-      propertyPath: restLength
-      value: 0.5
-      objectReference: {fileID: 0}
-    - target: {fileID: 4657263882133084457, guid: adb2fde709f5ea14282e581ea5159101, type: 3}
-      propertyPath: wheelRadius
-      value: 0.33
-      objectReference: {fileID: 0}
-    - target: {fileID: 4657263882133084457, guid: adb2fde709f5ea14282e581ea5159101, type: 3}
-      propertyPath: springTravel
-      value: 0.2
-      objectReference: {fileID: 0}
-    - target: {fileID: 4657263882133084457, guid: adb2fde709f5ea14282e581ea5159101, type: 3}
-      propertyPath: springStiffness
-      value: 30000
-      objectReference: {fileID: 0}
     - target: {fileID: 5874598489426984265, guid: adb2fde709f5ea14282e581ea5159101, type: 3}
       propertyPath: m_LocalPosition.x
       value: 0
@@ -10367,38 +10335,6 @@ PrefabInstance:
     - target: {fileID: 6319555869075658678, guid: adb2fde709f5ea14282e581ea5159101, type: 3}
       propertyPath: m_Name
       value: Player
-      objectReference: {fileID: 0}
-    - target: {fileID: 6362217195530741018, guid: adb2fde709f5ea14282e581ea5159101, type: 3}
-      propertyPath: restLength
-      value: 0.5
-      objectReference: {fileID: 0}
-    - target: {fileID: 6362217195530741018, guid: adb2fde709f5ea14282e581ea5159101, type: 3}
-      propertyPath: wheelRadius
-      value: 0.33
-      objectReference: {fileID: 0}
-    - target: {fileID: 6362217195530741018, guid: adb2fde709f5ea14282e581ea5159101, type: 3}
-      propertyPath: springTravel
-      value: 0.2
-      objectReference: {fileID: 0}
-    - target: {fileID: 6362217195530741018, guid: adb2fde709f5ea14282e581ea5159101, type: 3}
-      propertyPath: springStiffness
-      value: 30000
-      objectReference: {fileID: 0}
-    - target: {fileID: 7563602581806883286, guid: adb2fde709f5ea14282e581ea5159101, type: 3}
-      propertyPath: restLength
-      value: 0.5
-      objectReference: {fileID: 0}
-    - target: {fileID: 7563602581806883286, guid: adb2fde709f5ea14282e581ea5159101, type: 3}
-      propertyPath: wheelRadius
-      value: 0.33
-      objectReference: {fileID: 0}
-    - target: {fileID: 7563602581806883286, guid: adb2fde709f5ea14282e581ea5159101, type: 3}
-      propertyPath: springTravel
-      value: 0.2
-      objectReference: {fileID: 0}
-    - target: {fileID: 7563602581806883286, guid: adb2fde709f5ea14282e581ea5159101, type: 3}
-      propertyPath: springStiffness
-      value: 30000
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []

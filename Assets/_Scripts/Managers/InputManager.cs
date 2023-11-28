@@ -53,7 +53,18 @@ public class InputManager : MonoBehaviour
 
     private void OnSteer(InputAction.CallbackContext ctx)
     {
-        throw new NotImplementedException();
+        if (ctx.performed)
+        {
+            pc.steerInput = ctx.ReadValue<float>();
+        }
+        else if (ctx.canceled)
+        {
+            pc.steerInput = 0;
+        }
+        else
+        {
+            pc.steerInput = 0;
+        }
     }
 
     private void OnAccelerate(InputAction.CallbackContext ctx)
