@@ -59,16 +59,6 @@ public class GameManager : Singleton<GameManager>
     {
         if (scene.name == "TitleScene")
         {
-            if (pc != null)
-            {
-                pc.OnProjectilesDepleted -= CheckGameOver;
-            }
-
-            if (em != null)
-            {
-                em.OnAllEnemiesDefeated -= CheckGameOver;
-            }
-
             ChangeGameState(GameState.MAIN);
             Time.timeScale = 1;
         }
@@ -76,7 +66,6 @@ public class GameManager : Singleton<GameManager>
         {
             pc = FindObjectOfType<PlayerController>();
             mm = FindObjectOfType<MenuManager>();
-            em = FindObjectOfType<EnemyManager>();
 
             ChangeGameState(GameState.PLAY);
             Time.timeScale = 1;
@@ -111,11 +100,7 @@ public class GameManager : Singleton<GameManager>
 
     private void CheckGameOver()
     {
-        if (pc.RemainingProjectiles <=0 || em.RemainingEnemies <= 0)
-        {
-            GameOver();
-            return;
-        }
+        GameOver();
     }
 
     private void GameOver()

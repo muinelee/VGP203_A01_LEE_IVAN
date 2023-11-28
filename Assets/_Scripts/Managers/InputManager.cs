@@ -1,3 +1,4 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -9,8 +10,6 @@ public class InputManager : MonoBehaviour
 
     [SerializeField] private PlayerController pc;
 
-    private bool isPaused = false;
-
     private void Awake()
     {
         input = new PlayerInputActions();
@@ -21,8 +20,13 @@ public class InputManager : MonoBehaviour
         input.Enable();
         input.UI.Pause.performed += ctx => OnPause(ctx);
         input.UI.Pause.canceled += ctx => OnPause(ctx);
-        input.Mouse.Shoot.performed += ctx => OnShoot(ctx);
-        input.Mouse.Shoot.canceled += ctx => OnShoot(ctx);
+
+        input.Keyboard.Accelerate.performed += ctx => OnAccelerate(ctx);
+        input.Keyboard.Accelerate.canceled += ctx => OnAccelerate(ctx);
+        input.Keyboard.Decelerate.performed += ctx => OnDecelerate(ctx);
+        input.Keyboard.Decelerate.canceled += ctx => OnDecelerate(ctx);
+        input.Keyboard.Steer.performed += ctx => OnSteer(ctx);
+        input.Keyboard.Steer.canceled += ctx => OnSteer(ctx);
     }
 
     private void OnDisable()
@@ -30,8 +34,13 @@ public class InputManager : MonoBehaviour
         input.Disable();
         input.UI.Pause.performed -= ctx => OnPause(ctx);
         input.UI.Pause.canceled -= ctx => OnPause(ctx);
-        input.Mouse.Shoot.performed -= ctx => OnShoot(ctx);
-        input.Mouse.Shoot.canceled -= ctx => OnShoot(ctx);
+
+        input.Keyboard.Accelerate.performed -= ctx => OnAccelerate(ctx);
+        input.Keyboard.Accelerate.canceled -= ctx => OnAccelerate(ctx);
+        input.Keyboard.Decelerate.performed -= ctx => OnDecelerate(ctx);
+        input.Keyboard.Decelerate.canceled -= ctx => OnDecelerate(ctx);
+        input.Keyboard.Steer.performed -= ctx => OnSteer(ctx);
+        input.Keyboard.Steer.canceled -= ctx => OnSteer(ctx);
     }
 
     private void OnPause(InputAction.CallbackContext ctx)
@@ -42,20 +51,18 @@ public class InputManager : MonoBehaviour
         }
     }
 
-    private void OnShoot(InputAction.CallbackContext ctx)
+    private void OnSteer(InputAction.CallbackContext ctx)
     {
-        if (GameManager.Instance.CurrentGameState == GameState.PAUSE || 
-            GameManager.Instance.CurrentGameState == GameState.GAMEOVER ||
-            GameManager.Instance.CurrentGameState == GameState.MAIN) 
-                return;
+        throw new NotImplementedException();
+    }
 
-        if (ctx.performed)
-        {
-            pc.StartCharging();
-        }
-        if (ctx.canceled)
-        {
-            pc.HandleShooting();
-        }
+    private void OnAccelerate(InputAction.CallbackContext ctx)
+    {
+        throw new NotImplementedException();
+    }
+
+    private void OnDecelerate(InputAction.CallbackContext ctx)
+    {
+        throw new NotImplementedException();
     }
 }
