@@ -135,8 +135,8 @@ MonoBehaviour:
   wheelRearLeft: 0
   wheelRearRight: 1
   restLength: 0.8
-  springTravel: 0.5
-  springStiffness: 40000
+  springTravel: 0.2
+  springStiffness: 30000
   damperStiffness: 4000
   steerAngle: 0
   steerTime: 8
@@ -277,8 +277,8 @@ MonoBehaviour:
   wheelRearLeft: 0
   wheelRearRight: 0
   restLength: 0.8
-  springTravel: 0.5
-  springStiffness: 40000
+  springTravel: 0.2
+  springStiffness: 30000
   damperStiffness: 4000
   steerAngle: 8
   steerTime: 8
@@ -502,8 +502,8 @@ MonoBehaviour:
   wheelRearLeft: 1
   wheelRearRight: 0
   restLength: 0.8
-  springTravel: 0.5
-  springStiffness: 40000
+  springTravel: 0.2
+  springStiffness: 30000
   damperStiffness: 4000
   steerAngle: 0
   steerTime: 8
@@ -745,7 +745,7 @@ Rigidbody:
   m_UseGravity: 1
   m_IsKinematic: 0
   m_Interpolate: 0
-  m_Constraints: 64
+  m_Constraints: 0
   m_CollisionDetection: 0
 --- !u!114 &3758940624942768561
 MonoBehaviour:
@@ -959,8 +959,8 @@ MonoBehaviour:
   wheelRearLeft: 0
   wheelRearRight: 0
   restLength: 0.8
-  springTravel: 0.5
-  springStiffness: 40000
+  springTravel: 0.2
+  springStiffness: 30000
   damperStiffness: 4000
   steerAngle: 0
   steerTime: 8
