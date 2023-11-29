@@ -16,22 +16,21 @@ public class PlayerController : MonoBehaviour
 
     [Header("Inputs")]
     public float steerInput;
+    public float accelerateInput;
 
-    private float ackermannAngleLeft;
-    private float ackermannAngleRight;
+    public float ackermannAngleLeft;
+    public float ackermannAngleRight;
 
     private void Update()
     {
-        steerInput = Input.GetAxis("Horizontal");
-
         // Turning Right
-        if (steerInput > 0)
+        if (steerInput < 0)
         {
             ackermannAngleLeft = Mathf.Rad2Deg * Mathf.Atan(wheelBase / (turnRadius + (rearTrack / 2))) * steerInput;
             ackermannAngleRight = Mathf.Rad2Deg * Mathf.Atan(wheelBase / (turnRadius - (rearTrack / 2))) * steerInput;
         }
         // Turning Left
-        else if (steerInput < 0)
+        else if (steerInput > 0)
         {
             ackermannAngleLeft = Mathf.Rad2Deg * Mathf.Atan(wheelBase / (turnRadius - (rearTrack / 2))) * steerInput;
             ackermannAngleRight = Mathf.Rad2Deg * Mathf.Atan(wheelBase / (turnRadius + (rearTrack / 2))) * steerInput;
@@ -41,6 +40,27 @@ public class PlayerController : MonoBehaviour
         {
             ackermannAngleLeft = 0;
             ackermannAngleRight = 0;
+        }
+
+        foreach (WheelController w in wheels)
+        {
+            if (w.wheelFrontLeft)
+            {
+                w.steerAngle = ackermannAngleLeft;
+            }
+            else if (w.wheelFrontRight)
+            {
+                w.steerAngle = ackermannAngleRight;
+            }
+        }
+
+        // receive acceleration input
+        foreach (WheelController w in wheels)
+        {
+            if (w.wheelFrontLeft || w.wheelFrontRight)
+            {
+                w.accelerateInput = accelerateInput;
+            }
         }
     }
 }

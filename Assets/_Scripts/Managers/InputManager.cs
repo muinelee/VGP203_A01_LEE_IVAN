@@ -9,6 +9,7 @@ public class InputManager : MonoBehaviour
     [HideInInspector] public PlayerInputActions input;
 
     [SerializeField] private PlayerController pc;
+    [SerializeField] private WheelController wc;
 
     private void Awake()
     {
@@ -21,12 +22,10 @@ public class InputManager : MonoBehaviour
         input.UI.Pause.performed += ctx => OnPause(ctx);
         input.UI.Pause.canceled += ctx => OnPause(ctx);
 
-        input.Keyboard.Accelerate.performed += ctx => OnAccelerate(ctx);
-        input.Keyboard.Accelerate.canceled += ctx => OnAccelerate(ctx);
-        input.Keyboard.Decelerate.performed += ctx => OnDecelerate(ctx);
-        input.Keyboard.Decelerate.canceled += ctx => OnDecelerate(ctx);
-        input.Keyboard.Steer.performed += ctx => OnSteer(ctx);
-        input.Keyboard.Steer.canceled += ctx => OnSteer(ctx);
+        input.Keyboard.Move.performed += ctx => OnAccelerate(ctx);
+        input.Keyboard.Move.canceled += ctx => OnAccelerate(ctx);
+        input.Keyboard.Steering.performed += ctx => OnSteer(ctx);
+        input.Keyboard.Steering.canceled += ctx => OnSteer(ctx);
     }
 
     private void OnDisable()
@@ -35,12 +34,10 @@ public class InputManager : MonoBehaviour
         input.UI.Pause.performed -= ctx => OnPause(ctx);
         input.UI.Pause.canceled -= ctx => OnPause(ctx);
 
-        input.Keyboard.Accelerate.performed -= ctx => OnAccelerate(ctx);
-        input.Keyboard.Accelerate.canceled -= ctx => OnAccelerate(ctx);
-        input.Keyboard.Decelerate.performed -= ctx => OnDecelerate(ctx);
-        input.Keyboard.Decelerate.canceled -= ctx => OnDecelerate(ctx);
-        input.Keyboard.Steer.performed -= ctx => OnSteer(ctx);
-        input.Keyboard.Steer.canceled -= ctx => OnSteer(ctx);
+        input.Keyboard.Move.performed -= ctx => OnAccelerate(ctx);
+        input.Keyboard.Move.canceled -= ctx => OnAccelerate(ctx);
+        input.Keyboard.Steering.performed -= ctx => OnSteer(ctx);
+        input.Keyboard.Steering.canceled -= ctx => OnSteer(ctx);
     }
 
     private void OnPause(InputAction.CallbackContext ctx)
@@ -61,19 +58,17 @@ public class InputManager : MonoBehaviour
         {
             pc.steerInput = 0;
         }
-        else
-        {
-            pc.steerInput = 0;
-        }
     }
 
     private void OnAccelerate(InputAction.CallbackContext ctx)
     {
-        throw new NotImplementedException();
-    }
-
-    private void OnDecelerate(InputAction.CallbackContext ctx)
-    {
-        throw new NotImplementedException();
+        if (ctx.performed)
+        {
+            pc.accelerateInput = ctx.ReadValue<float>();
+        }
+        else if (ctx.canceled)
+        {
+            pc.accelerateInput = 0;
+        }
     }
 }

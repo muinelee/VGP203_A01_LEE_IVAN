@@ -84,7 +84,7 @@ public partial class @PlayerInputActions: IInputActionCollection2, IDisposable
             ""id"": ""3a9ce345-c7e6-4fbe-9e19-95d697798af7"",
             ""actions"": [
                 {
-                    ""name"": ""Accelerate"",
+                    ""name"": ""Move"",
                     ""type"": ""Button"",
                     ""id"": ""b7819b88-2c71-4e8b-b935-05f86496180d"",
                     ""expectedControlType"": ""Button"",
@@ -93,57 +93,81 @@ public partial class @PlayerInputActions: IInputActionCollection2, IDisposable
                     ""initialStateCheck"": false
                 },
                 {
-                    ""name"": ""Decelerate"",
-                    ""type"": ""Button"",
-                    ""id"": ""e5ff7272-b8b8-4911-9168-3276868c1be3"",
-                    ""expectedControlType"": ""Button"",
-                    ""processors"": """",
-                    ""interactions"": """",
-                    ""initialStateCheck"": false
-                },
-                {
-                    ""name"": ""Steer"",
-                    ""type"": ""Button"",
+                    ""name"": ""Steering"",
+                    ""type"": ""Value"",
                     ""id"": ""3832f974-6f5c-45b3-9a8d-1d4699f28508"",
-                    ""expectedControlType"": ""Button"",
+                    ""expectedControlType"": ""Axis"",
                     ""processors"": """",
                     ""interactions"": """",
-                    ""initialStateCheck"": false
+                    ""initialStateCheck"": true
                 }
             ],
             ""bindings"": [
                 {
-                    ""name"": """",
-                    ""id"": ""8d19ed44-7d90-41a0-becc-d8aa9477ca46"",
-                    ""path"": ""<Keyboard>/w"",
+                    ""name"": ""1D Axis"",
+                    ""id"": ""df1532a2-225f-454f-8b1b-0cf08a012994"",
+                    ""path"": ""1DAxis"",
                     ""interactions"": """",
                     ""processors"": """",
                     ""groups"": """",
-                    ""action"": ""Accelerate"",
-                    ""isComposite"": false,
+                    ""action"": ""Move"",
+                    ""isComposite"": true,
                     ""isPartOfComposite"": false
                 },
                 {
-                    ""name"": """",
-                    ""id"": ""f7c07625-4052-425e-9a1e-b135906c6f2c"",
+                    ""name"": ""negative"",
+                    ""id"": ""a753f287-8174-438a-83c7-ae29c080cf8f"",
                     ""path"": ""<Keyboard>/s"",
                     ""interactions"": """",
                     ""processors"": """",
                     ""groups"": """",
-                    ""action"": ""Decelerate"",
+                    ""action"": ""Move"",
                     ""isComposite"": false,
+                    ""isPartOfComposite"": true
+                },
+                {
+                    ""name"": ""positive"",
+                    ""id"": ""8753d065-f480-406f-8cdf-76ed86c9753d"",
+                    ""path"": ""<Keyboard>/w"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""Move"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": true
+                },
+                {
+                    ""name"": ""1D Axis"",
+                    ""id"": ""fa224c12-afaf-4aea-804f-c81933bd673f"",
+                    ""path"": ""1DAxis"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""Steering"",
+                    ""isComposite"": true,
                     ""isPartOfComposite"": false
                 },
                 {
-                    ""name"": """",
-                    ""id"": ""6b351583-d6fa-4b54-9cb5-89c308d6a464"",
+                    ""name"": ""negative"",
+                    ""id"": ""8ea361b8-d270-4af3-8295-56689ee29aef"",
                     ""path"": ""<Keyboard>/a"",
                     ""interactions"": """",
                     ""processors"": """",
                     ""groups"": """",
-                    ""action"": ""Steer"",
+                    ""action"": ""Steering"",
                     ""isComposite"": false,
-                    ""isPartOfComposite"": false
+                    ""isPartOfComposite"": true
+                },
+                {
+                    ""name"": ""positive"",
+                    ""id"": ""2de0dfee-6e7b-446c-a728-4d1650a68f0e"",
+                    ""path"": ""<Keyboard>/d"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""Steering"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": true
                 }
             ]
         }
@@ -158,9 +182,8 @@ public partial class @PlayerInputActions: IInputActionCollection2, IDisposable
         m_Mouse_Shoot = m_Mouse.FindAction("Shoot", throwIfNotFound: true);
         // Keyboard
         m_Keyboard = asset.FindActionMap("Keyboard", throwIfNotFound: true);
-        m_Keyboard_Accelerate = m_Keyboard.FindAction("Accelerate", throwIfNotFound: true);
-        m_Keyboard_Decelerate = m_Keyboard.FindAction("Decelerate", throwIfNotFound: true);
-        m_Keyboard_Steer = m_Keyboard.FindAction("Steer", throwIfNotFound: true);
+        m_Keyboard_Move = m_Keyboard.FindAction("Move", throwIfNotFound: true);
+        m_Keyboard_Steering = m_Keyboard.FindAction("Steering", throwIfNotFound: true);
     }
 
     public void Dispose()
@@ -314,16 +337,14 @@ public partial class @PlayerInputActions: IInputActionCollection2, IDisposable
     // Keyboard
     private readonly InputActionMap m_Keyboard;
     private List<IKeyboardActions> m_KeyboardActionsCallbackInterfaces = new List<IKeyboardActions>();
-    private readonly InputAction m_Keyboard_Accelerate;
-    private readonly InputAction m_Keyboard_Decelerate;
-    private readonly InputAction m_Keyboard_Steer;
+    private readonly InputAction m_Keyboard_Move;
+    private readonly InputAction m_Keyboard_Steering;
     public struct KeyboardActions
     {
         private @PlayerInputActions m_Wrapper;
         public KeyboardActions(@PlayerInputActions wrapper) { m_Wrapper = wrapper; }
-        public InputAction @Accelerate => m_Wrapper.m_Keyboard_Accelerate;
-        public InputAction @Decelerate => m_Wrapper.m_Keyboard_Decelerate;
-        public InputAction @Steer => m_Wrapper.m_Keyboard_Steer;
+        public InputAction @Move => m_Wrapper.m_Keyboard_Move;
+        public InputAction @Steering => m_Wrapper.m_Keyboard_Steering;
         public InputActionMap Get() { return m_Wrapper.m_Keyboard; }
         public void Enable() { Get().Enable(); }
         public void Disable() { Get().Disable(); }
@@ -333,28 +354,22 @@ public partial class @PlayerInputActions: IInputActionCollection2, IDisposable
         {
             if (instance == null || m_Wrapper.m_KeyboardActionsCallbackInterfaces.Contains(instance)) return;
             m_Wrapper.m_KeyboardActionsCallbackInterfaces.Add(instance);
-            @Accelerate.started += instance.OnAccelerate;
-            @Accelerate.performed += instance.OnAccelerate;
-            @Accelerate.canceled += instance.OnAccelerate;
-            @Decelerate.started += instance.OnDecelerate;
-            @Decelerate.performed += instance.OnDecelerate;
-            @Decelerate.canceled += instance.OnDecelerate;
-            @Steer.started += instance.OnSteer;
-            @Steer.performed += instance.OnSteer;
-            @Steer.canceled += instance.OnSteer;
+            @Move.started += instance.OnMove;
+            @Move.performed += instance.OnMove;
+            @Move.canceled += instance.OnMove;
+            @Steering.started += instance.OnSteering;
+            @Steering.performed += instance.OnSteering;
+            @Steering.canceled += instance.OnSteering;
         }
 
         private void UnregisterCallbacks(IKeyboardActions instance)
         {
-            @Accelerate.started -= instance.OnAccelerate;
-            @Accelerate.performed -= instance.OnAccelerate;
-            @Accelerate.canceled -= instance.OnAccelerate;
-            @Decelerate.started -= instance.OnDecelerate;
-            @Decelerate.performed -= instance.OnDecelerate;
-            @Decelerate.canceled -= instance.OnDecelerate;
-            @Steer.started -= instance.OnSteer;
-            @Steer.performed -= instance.OnSteer;
-            @Steer.canceled -= instance.OnSteer;
+            @Move.started -= instance.OnMove;
+            @Move.performed -= instance.OnMove;
+            @Move.canceled -= instance.OnMove;
+            @Steering.started -= instance.OnSteering;
+            @Steering.performed -= instance.OnSteering;
+            @Steering.canceled -= instance.OnSteering;
         }
 
         public void RemoveCallbacks(IKeyboardActions instance)
@@ -382,8 +397,7 @@ public partial class @PlayerInputActions: IInputActionCollection2, IDisposable
     }
     public interface IKeyboardActions
     {
-        void OnAccelerate(InputAction.CallbackContext context);
-        void OnDecelerate(InputAction.CallbackContext context);
-        void OnSteer(InputAction.CallbackContext context);
+        void OnMove(InputAction.CallbackContext context);
+        void OnSteering(InputAction.CallbackContext context);
     }
 }
