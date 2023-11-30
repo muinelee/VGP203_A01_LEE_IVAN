@@ -14,7 +14,6 @@ public class GameManager : Singleton<GameManager>
 {
     [SerializeField] private SphereController sc;
     [SerializeField] private MenuManager mm;
-    [SerializeField] private EnemyManager em;
 
     public event Action OnGameStateChanged;
     private GameState _currentGameState;

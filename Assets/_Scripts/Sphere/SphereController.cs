@@ -20,7 +20,6 @@ public class SphereController : MonoBehaviour
     [Header("Car Stats")]
     public float forwardAccel = 15.0f;
     public float reverseAccel = 5.0f;
-    //public float maxSpeed = 200.0f;
     public float turnStrength = 100.0f;
     public float wheelTurnAngle = 40.0f;
     public float dragOnGround = 3.0f;
@@ -64,6 +63,7 @@ public class SphereController : MonoBehaviour
 
         // Apply visual spin to all wheels
         float wheelRotationAmount = rb.velocity.magnitude * wheelSpinSpeed * Time.deltaTime;
+        // Save the last direction the car was moving in
         float rotationDirection = speedInput != 0 ? (speedInput >= 0 ? 1.0f : -1.0f) : lastDirection;
 
         RotateWheels(FLWheelSpin, wheelRotationAmount * rotationDirection);
@@ -71,7 +71,6 @@ public class SphereController : MonoBehaviour
         RotateWheels(BLWheelSpin, wheelRotationAmount * rotationDirection);
         RotateWheels(BRWheelSpin, wheelRotationAmount * rotationDirection);
 
-        //turnInput = Input.GetAxis("Horizontal");
         turnInput = steerInput;
 
         if (grounded)
