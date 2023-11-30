@@ -10,9 +10,7 @@ public class MenuManager : MonoBehaviour
     [SerializeField] private GameObject hud;
 
     [Header("HUD Elements")]
-    [SerializeField] private Slider powerGaugeSlider;
-    [SerializeField] private TMP_Text remainingProjectilesText;
-    [SerializeField] private TMP_Text remainingEnemiesText;
+    [SerializeField] private TMP_Text lapTimer;
 
     [Header("Menus")]
     [SerializeField] private GameObject mainMenu;
@@ -128,23 +126,6 @@ public class MenuManager : MonoBehaviour
         masterVolSlider.onValueChanged.AddListener(value => SetVolume(value, masterVolText, "Master"));
         sfxVolSlider.onValueChanged.AddListener(value => SetVolume(value, sfxVolText, "SFX"));
         musicVolSlider.onValueChanged.AddListener(value => SetVolume(value, musicVolText, "Music"));
-    }
-
-    public void SetPowerGauge(float value, float min, float max)
-    {
-        powerGaugeSlider.minValue = min;
-        powerGaugeSlider.maxValue = max;
-        powerGaugeSlider.value = value;
-    }
-
-    public void UpdateProjectiles(int remainingProjectiles)
-    {
-        remainingProjectilesText.text = "X" + remainingProjectiles.ToString();
-    }
-
-    public void UpdateEnemies(int remainingEnemies)
-    {
-        remainingEnemiesText.text = "X" + remainingEnemies.ToString();
     }
 
     private void UpdateSliderText(float value, TMP_Text text)
