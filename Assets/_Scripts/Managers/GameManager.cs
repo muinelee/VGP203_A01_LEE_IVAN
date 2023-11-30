@@ -12,7 +12,7 @@ public enum GameState
 
 public class GameManager : Singleton<GameManager>
 {
-    [SerializeField] private PlayerController pc;
+    [SerializeField] private SphereController sc;
     [SerializeField] private MenuManager mm;
     [SerializeField] private EnemyManager em;
 
@@ -64,7 +64,7 @@ public class GameManager : Singleton<GameManager>
         }
         else if (scene.name == "PlayScene")
         {
-            pc = FindObjectOfType<PlayerController>();
+            sc = FindObjectOfType<SphereController>();
             mm = FindObjectOfType<MenuManager>();
 
             ChangeGameState(GameState.PLAY);
