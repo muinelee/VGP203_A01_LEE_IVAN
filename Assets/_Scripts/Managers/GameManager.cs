@@ -159,7 +159,6 @@ public class GameManager : Singleton<GameManager>
         ChangeGameState(GameState.WIN);
         Time.timeScale = 0;
         OnGameStateChanged?.Invoke();
-        mm.wm_bestLapTime.text = "BEST LAP TIME: " + FormatTime(TimeSpan.FromSeconds(bestLapTime));
     }
 
     private IEnumerator StartCountdown()
@@ -206,9 +205,13 @@ public class GameManager : Singleton<GameManager>
     {
         if (lapTime < bestLapTime)
         {
-            string lapTimeText = FormatTime(TimeSpan.FromSeconds(lapTime));
-            mm.bestLapTime.text = "BEST LAP TIME: " + lapTimeText;
+            bestLapTime = lapTime;
+            PlayerPrefs.SetFloat("BestLapTime", bestLapTime);
+            PlayerPrefs.Save();
+
+            mm.UpdateBestLapTimeDisplay(bestLapTime);
         }
+
         lapTime = 0f;
         currentLap++;
         UpdateLapCounter();
@@ -224,7 +227,7 @@ public class GameManager : Singleton<GameManager>
         mm.currentLapCounter.text = "LAP: " + currentLap + "/" + totalLaps;
     }
 
-    private string FormatTime(TimeSpan timeSpan)
+    public string FormatTime(TimeSpan timeSpan)
     {
         return string.Format("{0:D2}:{1:D2}:{2:D3}",
                              timeSpan.Minutes,

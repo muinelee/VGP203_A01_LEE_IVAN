@@ -68,6 +68,7 @@ public class MenuManager : MonoBehaviour
         SettingsManager.Instance.LoadVolumeSettings();
         InitializeButtons();
         InitializeSliders();
+        InitializeBestLapTime();
     }
 
     private void OnEnable()
@@ -154,6 +155,20 @@ public class MenuManager : MonoBehaviour
         text.text = (value * 100).ToString("0");
     }
 
+    private void InitializeBestLapTime()
+    {
+        // Initialize best lap time display
+        float savedBestLapTime = PlayerPrefs.GetFloat("BestLapTime", float.MaxValue);
+        if (savedBestLapTime != float.MaxValue)
+        {
+            UpdateBestLapTimeDisplay(savedBestLapTime);
+        }
+        else
+        {
+            bestLapTime.text = "BEST LAP TIME: N/A";
+        }
+    }
+
     private void SetVolume(float value, TMP_Text text, string name)
     {
         // Update the text
@@ -163,6 +178,12 @@ public class MenuManager : MonoBehaviour
         SettingsManager.Instance.SaveVolumeSettings(masterVolSlider.value, sfxVolSlider.value, musicVolSlider.value);
 
         AudioManager.Instance.InitializeMixer();
+    }
+
+    public void UpdateBestLapTimeDisplay(float bestTime)
+    {
+        TimeSpan bestTimeSpan = TimeSpan.FromSeconds(bestTime);
+        bestLapTime.text = "BEST LAP TIME: " + GameManager.Instance.FormatTime(bestTimeSpan);
     }
 
     private void HideAllMenus()
@@ -231,6 +252,17 @@ public class MenuManager : MonoBehaviour
         {
             winMenu.SetActive(true);
             hud.SetActive(false);
+
+            float bestLapTime = PlayerPrefs.GetFloat("BestLapTime", float.MaxValue);
+            if (bestLapTime != float.MaxValue)
+            {
+                TimeSpan bestTimeSpan = TimeSpan.FromSeconds(bestLapTime);
+                wm_bestLapTime.text = "BEST LAP TIME: " + GameManager.Instance.FormatTime(bestTimeSpan);
+            }
+            else
+            {
+                wm_bestLapTime.text = "BEST LAP TIME: N/A";
+            }
         }
     }
 
