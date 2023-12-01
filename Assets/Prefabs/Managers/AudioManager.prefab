@@ -338,5 +338,3 @@ MonoBehaviour:
   twoDTemplate: {fileID: 4815481818589234889}
   numberOfPool: 15
   mixer: {fileID: 24100000, guid: 6e4a7051887e41240b2afebf6835b5fc, type: 2}
-  gsm: {fileID: 7017360869298829019, guid: 1d936434f3c1b094789e408661174e37, type: 3}
-  mm: {fileID: 4698818601210217392, guid: f6650682bc23eba40ad1fc7568be1f34, type: 3}
