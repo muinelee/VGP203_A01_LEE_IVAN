@@ -70,4 +70,16 @@ public class InputManager : MonoBehaviour
             controller.gasInput = 0;
         }
     }
+
+    public void ToggleInput(bool enable)
+    {
+        if (enable)
+        {
+            input.Enable();
+        }
+        else
+        {
+            input.Disable();
+        }
+    }
 }

@@ -2,17 +2,21 @@ using System;
 using UnityEngine;
 using UnityEngine.UI;
 using TMPro;
-using UnityEngine.SceneManagement;
+
 
 public class MenuManager : MonoBehaviour
 {
-    [Header("HUD")]
+    [Header("HUD Reference")]
     [SerializeField] private GameObject hud;
 
     [Header("HUD Elements")]
-    [SerializeField] private TMP_Text lapTimer;
+    [SerializeField] public TMP_Text lapTimer;
+    [SerializeField] public TMP_Text bestLapTime;
+    [SerializeField] public TMP_Text currentLapCounter;
+    [SerializeField] public GameObject countdownDisplay;
+    [SerializeField] public TMP_Text countdownText;
 
-    [Header("Menus")]
+    [Header("Menus References")]
     [SerializeField] private GameObject mainMenu;
     [SerializeField] private GameObject settingsMenu;
     [SerializeField] private GameObject pauseMenu;
@@ -25,6 +29,7 @@ public class MenuManager : MonoBehaviour
 
     [Header("Pause Menu Buttons")]
     [SerializeField] private Button pm_ResumeButton;
+    [SerializeField] private Button pm_RestartButton;
     [SerializeField] private Button pm_SettingsButton;
     [SerializeField] private Button pm_MainMenuButton;
     [SerializeField] private Button pm_QuitButton;
@@ -79,6 +84,7 @@ public class MenuManager : MonoBehaviour
                 break;
             case GameState.PLAY:
                 PlayGame();
+                ResetUIForPlay();
                 break;
             case GameState.PAUSE:
                 ActivatePauseMenu();
@@ -98,11 +104,12 @@ public class MenuManager : MonoBehaviour
         mm_QuitButton.onClick.AddListener(QuitGame);
 
         pm_ResumeButton.onClick.AddListener(ResumeGame);
+        pm_RestartButton.onClick.AddListener(RestartGame);
         pm_SettingsButton.onClick.AddListener(ActivateSettingsMenu);
         pm_MainMenuButton.onClick.AddListener(GoToMainMenu);
         pm_QuitButton.onClick.AddListener(QuitGame);
 
-        go_RestartButton.onClick.AddListener(PlayGame);
+        go_RestartButton.onClick.AddListener(RestartGame);
         go_SettingsButton.onClick.AddListener(ActivateSettingsMenu);
         go_MainMenuButton.onClick.AddListener(GoToMainMenu);
         go_QuitButton.onClick.AddListener(QuitGame);
@@ -188,7 +195,7 @@ public class MenuManager : MonoBehaviour
 
     private void ActivatePauseMenu()
     {
-        if (SceneManager.GetActiveScene().name == "PlayScene")
+        if (GameManager.Instance.CurrentGameState == GameState.PAUSE)
         {
             pauseMenu.SetActive(true);
             hud.SetActive(false);
@@ -211,10 +218,25 @@ public class MenuManager : MonoBehaviour
             HideAllMenus();
             hud.SetActive(true);
         }
-        else if (GameManager.Instance.CurrentGameState == GameState.MAIN || GameManager.Instance.CurrentGameState == GameState.GAMEOVER)
+        else if (GameManager.Instance.CurrentGameState == GameState.MAIN || GameManager.Instance.CurrentGameState == GameState.GAMEOVER || GameManager.Instance.CurrentGameState == GameState.PAUSE)
         {
             GameManager.Instance.LoadPlayScene();
         }
+    }
+
+    private void ResetUIForPlay()
+    {
+        countdownDisplay.SetActive(GameManager.Instance.isCountingDown);
+        if (GameManager.Instance.isCountingDown)
+        {
+            countdownText.text = GameManager.Instance.countdownTime.ToString("0");
+        }
+        lapTimer.text = "LAP TIME: 00:00:000";
+    }
+
+    private void RestartGame()
+    {
+        GameManager.Instance.RestartGame();
     }
 
     private void ResumeGame()

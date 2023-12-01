@@ -44,6 +44,11 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 6ef8cfc2649067141a3149041e1e1acb, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  pc: {fileID: 0}
+  sc: {fileID: 0}
   mm: {fileID: 0}
-  em: {fileID: 0}
+  currentLap: 0
+  totalLaps: 1
+  countdownTime: 3
+  isCountingDown: 0
+  lapTime: 0
+  isLapTimerRunning: 0

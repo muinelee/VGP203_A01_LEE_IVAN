@@ -17,7 +17,6 @@ public class TrackCheckpoints : MonoBehaviour
         {
             CheckpointSingle checkpointSingle = checkpointSingleTransform.GetComponent<CheckpointSingle>();
             checkpointSingle.SetTrackCheckpoints(this);
-
             checkpointSingleList.Add(checkpointSingle);
         }
 
@@ -30,10 +29,21 @@ public class TrackCheckpoints : MonoBehaviour
         {
             Debug.Log("Correct checkpoint");
             nextCheckpointSingleIndex = (nextCheckpointSingleIndex + 1) % checkpointSingleList.Count;
+
+            // Check if the player has passed the last checkpoint in the list
+            if (nextCheckpointSingleIndex == 0)
+            {
+                GameManager.Instance.LapCompleted();
+            }
         }
         else
         {
             Debug.Log("Wrong checkpoint");
         }
+    }
+
+    public void SetTotalLaps(int laps)
+    {
+        GameManager.Instance.totalLaps = laps;
     }
 }
