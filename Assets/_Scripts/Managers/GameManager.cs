@@ -46,6 +46,7 @@ public class GameManager : Singleton<GameManager>
     protected override void Awake()
     {
         base.Awake();
+        bestLapTime = PlayerPrefs.GetFloat("BestLapTime", float.MaxValue);
     }
 
     private void Update()
@@ -96,6 +97,7 @@ public class GameManager : Singleton<GameManager>
     {
         countdownTime = 3f;
         lapTime = 0f;
+        currentLap = 0;
         isLapTimerRunning = false;
     }
 
@@ -203,7 +205,7 @@ public class GameManager : Singleton<GameManager>
 
     public void LapCompleted()
     {
-        if (lapTime < bestLapTime)
+        if (lapTime <= bestLapTime)
         {
             bestLapTime = lapTime;
             PlayerPrefs.SetFloat("BestLapTime", bestLapTime);
