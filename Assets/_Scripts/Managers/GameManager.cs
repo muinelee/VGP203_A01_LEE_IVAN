@@ -9,6 +9,7 @@ public enum GameState
     PLAY,
     PAUSE,
     GAMEOVER,
+    WIN,
 }
 
 public class GameManager : Singleton<GameManager>
@@ -153,6 +154,14 @@ public class GameManager : Singleton<GameManager>
         OnGameStateChanged?.Invoke();
     }
 
+    public void WinGame()
+    {
+        ChangeGameState(GameState.WIN);
+        Time.timeScale = 0;
+        OnGameStateChanged?.Invoke();
+        mm.wm_bestLapTime.text = "BEST LAP TIME: " + FormatTime(TimeSpan.FromSeconds(bestLapTime));
+    }
+
     private IEnumerator StartCountdown()
     {
         if (!isCountingDown)
@@ -206,7 +215,7 @@ public class GameManager : Singleton<GameManager>
 
         if (currentLap >= totalLaps)
         {
-            GameOver();
+            WinGame();
         }
     }
 

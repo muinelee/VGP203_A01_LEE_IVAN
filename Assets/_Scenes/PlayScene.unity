@@ -6921,10 +6921,6 @@ PrefabInstance:
       propertyPath: m_Name
       value: InputManager
       objectReference: {fileID: 0}
-    - target: {fileID: 1502386738714477596, guid: 39caa457594f35f428fcb9937ff83009, type: 3}
-      propertyPath: m_IsActive
-      value: 1
-      objectReference: {fileID: 0}
     - target: {fileID: 8377041986581231841, guid: 39caa457594f35f428fcb9937ff83009, type: 3}
       propertyPath: m_LocalPosition.x
       value: 0
@@ -6964,14 +6960,6 @@ PrefabInstance:
     - target: {fileID: 8377041986581231841, guid: 39caa457594f35f428fcb9937ff83009, type: 3}
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 9102873552011323894, guid: 39caa457594f35f428fcb9937ff83009, type: 3}
-      propertyPath: pc
-      value: 
-      objectReference: {fileID: 0}
-    - target: {fileID: 9102873552011323894, guid: 39caa457594f35f428fcb9937ff83009, type: 3}
-      propertyPath: m_Enabled
-      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 9102873552011323894, guid: 39caa457594f35f428fcb9937ff83009, type: 3}
       propertyPath: controller
@@ -11641,14 +11629,6 @@ PrefabInstance:
     - target: {fileID: 3891946764035386424, guid: 92dd4f786eb54ff4b8971bf9f3909849, type: 3}
       propertyPath: m_Name
       value: PlayerCar
-      objectReference: {fileID: 0}
-    - target: {fileID: 3891946764035386424, guid: 92dd4f786eb54ff4b8971bf9f3909849, type: 3}
-      propertyPath: m_IsActive
-      value: 1
-      objectReference: {fileID: 0}
-    - target: {fileID: 3891946764035386424, guid: 92dd4f786eb54ff4b8971bf9f3909849, type: 3}
-      propertyPath: m_TagString
-      value: Player
       objectReference: {fileID: 0}
     - target: {fileID: 8747232650682355115, guid: 92dd4f786eb54ff4b8971bf9f3909849, type: 3}
       propertyPath: m_LocalPosition.x

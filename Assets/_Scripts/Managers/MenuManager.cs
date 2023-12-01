@@ -21,6 +21,7 @@ public class MenuManager : MonoBehaviour
     [SerializeField] private GameObject settingsMenu;
     [SerializeField] private GameObject pauseMenu;
     [SerializeField] private GameObject gameOverMenu;
+    [SerializeField] private GameObject winMenu;
 
     [Header("Main Menu Buttons")]
     [SerializeField] private Button mm_PlayButton;
@@ -39,6 +40,12 @@ public class MenuManager : MonoBehaviour
     [SerializeField] private Button go_SettingsButton;
     [SerializeField] private Button go_MainMenuButton;
     [SerializeField] private Button go_QuitButton;
+
+    [Header("Win Menu Buttons")]
+    [SerializeField] public TMP_Text wm_bestLapTime;
+    [SerializeField] private Button wm_RestartButton;
+    [SerializeField] private Button wm_MainMenuButton;
+    [SerializeField] private Button wm_QuitButton;
 
     [Header("Settings Menu Buttons, Sliders, Texts")]
     [SerializeField] private Button closeButton;
@@ -92,6 +99,9 @@ public class MenuManager : MonoBehaviour
             case GameState.GAMEOVER:
                 ActivateGameOverMenu();
                 break;
+            case GameState.WIN:
+                ActivateWinMenu();
+                break;
             default:
                 break;
         }
@@ -113,6 +123,10 @@ public class MenuManager : MonoBehaviour
         go_SettingsButton.onClick.AddListener(ActivateSettingsMenu);
         go_MainMenuButton.onClick.AddListener(GoToMainMenu);
         go_QuitButton.onClick.AddListener(QuitGame);
+
+        wm_RestartButton.onClick.AddListener(RestartGame);
+        wm_MainMenuButton.onClick.AddListener(GoToMainMenu);
+        wm_QuitButton.onClick.AddListener(QuitGame);
 
         closeButton.onClick.AddListener(Close);
     }
@@ -207,6 +221,15 @@ public class MenuManager : MonoBehaviour
         if (GameManager.Instance.CurrentGameState == GameState.GAMEOVER)
         {
             gameOverMenu.SetActive(true);
+            hud.SetActive(false);
+        }
+    }
+
+    private void ActivateWinMenu()
+    {
+        if (GameManager.Instance.CurrentGameState == GameState.WIN)
+        {
+            winMenu.SetActive(true);
             hud.SetActive(false);
         }
     }

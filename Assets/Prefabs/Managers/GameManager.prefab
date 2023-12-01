@@ -47,7 +47,8 @@ MonoBehaviour:
   sc: {fileID: 0}
   mm: {fileID: 0}
   currentLap: 0
-  totalLaps: 1
+  totalLaps: 2
+  bestLapTime: 3.4028235e+38
   countdownTime: 3
   isCountingDown: 0
   lapTime: 0
