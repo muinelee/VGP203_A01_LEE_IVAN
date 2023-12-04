@@ -8,7 +8,7 @@ public class InputManager : MonoBehaviour
 {
     [HideInInspector] public PlayerInputActions input;
 
-    [SerializeField] private TestController controller;
+    [SerializeField] private SportsCarController controller;
 
     private void Awake()
     {
