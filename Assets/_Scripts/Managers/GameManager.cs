@@ -20,6 +20,7 @@ public class GameManager : Singleton<GameManager>
     [SerializeField] public int currentLap = 0;
     [SerializeField] public int totalLaps = 3;
     [SerializeField] public float bestLapTime = float.MaxValue;
+    [SerializeField] public ArrayList checkpointTimes = new ArrayList();
 
     public float countdownTime = 3f;
     public bool isCountingDown = false;
@@ -99,6 +100,8 @@ public class GameManager : Singleton<GameManager>
         lapTime = 0f;
         currentLap = 0;
         isLapTimerRunning = false;
+
+        checkpointTimes.Clear();
     }
 
     public void RestartGame()
@@ -214,8 +217,10 @@ public class GameManager : Singleton<GameManager>
             mm.UpdateBestLapTimeDisplay(bestLapTime);
         }
 
+        mm.UpdateLastLapTimeDisplay(lapTime);
         lapTime = 0f;
         currentLap++;
+
         UpdateLapCounter();
 
         if (currentLap >= totalLaps)
@@ -227,6 +232,22 @@ public class GameManager : Singleton<GameManager>
     public void UpdateLapCounter()
     {
         mm.currentLapCounter.text = "LAP: " + currentLap + "/" + totalLaps;
+    }
+
+    public void PlayerThroughCheckpoint(int checkpointIndex)
+    {
+        if (!isLapTimerRunning) return;
+
+        // Extend the list if this is a new checkpoint for the current lap
+        if (checkpointIndex >= checkpointTimes.Count)
+        {
+            checkpointTimes.Add(0f); // Initialize with 0
+        }
+
+        // Update the checkpoint time
+        checkpointTimes[checkpointIndex] = lapTime;
+
+        mm.UpdateCheckpointTimesDisplay(checkpointTimes);
     }
 
     public string FormatTime(TimeSpan timeSpan)

@@ -2,7 +2,7 @@ using System;
 using UnityEngine;
 using UnityEngine.UI;
 using TMPro;
-
+using System.Collections;
 
 public class MenuManager : MonoBehaviour
 {
@@ -12,6 +12,11 @@ public class MenuManager : MonoBehaviour
     [Header("HUD Elements")]
     [SerializeField] public TMP_Text lapTimer;
     [SerializeField] public TMP_Text bestLapTime;
+    [SerializeField] public TMP_Text lastLapTime;
+    [SerializeField] public TMP_Text CP1;
+    [SerializeField] public TMP_Text CP2;
+    [SerializeField] public TMP_Text CP3;
+    [SerializeField] public TMP_Text CP4;
     [SerializeField] public TMP_Text currentLapCounter;
     [SerializeField] public GameObject countdownDisplay;
     [SerializeField] public TMP_Text countdownText;
@@ -166,6 +171,38 @@ public class MenuManager : MonoBehaviour
         else
         {
             bestLapTime.text = "BEST LAP TIME: N/A";
+        }
+    }
+
+    public void UpdateLastLapTimeDisplay(float lastTime)
+    {
+        TimeSpan lastTimeSpan = TimeSpan.FromSeconds(lastTime);
+        lastLapTime.text = "LAST LAP TIME: " + GameManager.Instance.FormatTime(lastTimeSpan);
+    }
+
+    public void UpdateCheckpointTimesDisplay(ArrayList checkpointTimes)
+    {
+        for (int i = 0; i < checkpointTimes.Count; i++)
+        {
+            float checkpointTime = (float)checkpointTimes[i];
+            TimeSpan timeSpan = TimeSpan.FromSeconds(checkpointTime);
+            string formattedTime = GameManager.Instance.FormatTime(timeSpan);
+
+            switch (i)
+            {
+                case 0:
+                    CP1.text = "CHECKPOINT 1: " + formattedTime;
+                    break;
+                case 1:
+                    CP2.text = "CHECKPOINT 2: " + formattedTime;
+                    break;
+                case 2:
+                    CP3.text = "CHECKPOINT 3: " + formattedTime;
+                    break;
+                case 3:
+                    CP4.text = "CHECKPOINT 4: " + formattedTime;
+                    break;
+            }
         }
     }
 

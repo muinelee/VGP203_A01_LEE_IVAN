@@ -25,9 +25,11 @@ public class TrackCheckpoints : MonoBehaviour
 
     public void PlayerThroughCheckpoint(CheckpointSingle checkpointSingle)
     {
+        int checkpointIndex = checkpointSingleList.IndexOf(checkpointSingle);
+
         if (checkpointSingleList.IndexOf(checkpointSingle) == nextCheckpointSingleIndex)
         {
-            Debug.Log("Correct checkpoint");
+            GameManager.Instance.PlayerThroughCheckpoint(checkpointIndex);
             nextCheckpointSingleIndex = (nextCheckpointSingleIndex + 1) % checkpointSingleList.Count;
 
             // Check if the player has passed the last checkpoint in the list
