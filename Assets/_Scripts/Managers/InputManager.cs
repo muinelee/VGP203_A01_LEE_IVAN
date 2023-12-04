@@ -8,7 +8,7 @@ public class InputManager : MonoBehaviour
 {
     [HideInInspector] public PlayerInputActions input;
 
-    [SerializeField] private SphereController controller;
+    [SerializeField] private TestController controller;
 
     private void Awake()
     {
@@ -51,11 +51,11 @@ public class InputManager : MonoBehaviour
     {
         if (ctx.performed)
         {
-            controller.steerInput = ctx.ReadValue<float>();
+            controller.SetSteerInput(ctx.ReadValue<float>());
         }
         else if (ctx.canceled)
         {
-            controller.steerInput = 0;
+            controller.SetSteerInput(0);
         }
     }
 
@@ -63,11 +63,11 @@ public class InputManager : MonoBehaviour
     {
         if (ctx.performed)
         {
-            controller.gasInput = ctx.ReadValue<float>();
+            controller.SetGasInput(ctx.ReadValue<float>());
         }
         else if (ctx.canceled)
         {
-            controller.gasInput = 0;
+            controller.SetGasInput(0);
         }
     }
 

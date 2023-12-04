@@ -20,7 +20,7 @@ public class SphereController : MonoBehaviour
     [Header("Car Stats")]
     public float forwardAccel = 15.0f;
     public float reverseAccel = 5.0f;
-    public float turnStrength = 100.0f;
+    public float turnStrength = 70.0f;
     public float wheelTurnAngle = 40.0f;
     public float dragOnGround = 3.0f;
 

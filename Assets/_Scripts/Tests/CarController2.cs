@@ -17,6 +17,7 @@ public class CarController2 : MonoBehaviour
     [SerializeField] private float motorForce;
     [SerializeField] private float breakForce;
     [SerializeField] private float maxSteeringAngle;
+    [SerializeField] private float downforceMultiplier = 100f; // Adjustable downforce multiplier
 
     [SerializeField] private WheelCollider FLWheelCollider;
     [SerializeField] private WheelCollider FRWheelCollider;
@@ -28,30 +29,46 @@ public class CarController2 : MonoBehaviour
     [SerializeField] private Transform BLWheelTransform;
     [SerializeField] private Transform BRWheelTransform;
 
+    private Rigidbody rb;
+
+    private void Start()
+    {
+        rb = GetComponent<Rigidbody>();
+    }
+
     private void FixedUpdate()
     {
         GetInput();
         HandleMotor();
         HandleSteering();
         UpdateWheels();
+        ApplyDownforce();
     }
 
     private void GetInput()
     {
-        horizontalInput = Input.GetAxis(HORIZONTAL);
-        verticalInput = Input.GetAxis(VERTICAL);
-        isBreaking = Input.GetKey(KeyCode.Space);
+        horizontalInput = Input.GetAxis(HORIZONTAL); // Get the input value directly
+        verticalInput = Input.GetAxis(VERTICAL); // Get the input value directly
+        isBreaking = Input.GetKey(KeyCode.Space); // Use GetKey instead of GetKeyDown for continuous brake checking
     }
 
     private void HandleMotor()
     {
-        FLWheelCollider.motorTorque = verticalInput * motorForce;
-        FRWheelCollider.motorTorque = verticalInput * motorForce;
-        currentBreakForce = isBreaking ? breakForce : 0f;
-        if (isBreaking)
+        // Only apply torque if there is vertical input
+    if (Mathf.Abs(verticalInput) > Mathf.Epsilon) // Mathf.Epsilon is a very small number, effectively zero
         {
-            ApplyBreaking();
+            float torque = verticalInput * motorForce;
+            FLWheelCollider.motorTorque = torque;
+            FRWheelCollider.motorTorque = torque;
         }
+        else // No input, no torque
+        {
+            FLWheelCollider.motorTorque = 0;
+            FRWheelCollider.motorTorque = 0;
+        }
+
+        currentBreakForce = isBreaking ? breakForce : 0f;
+        ApplyBreaking();
     }
 
     private void ApplyBreaking()
@@ -75,6 +92,11 @@ public class CarController2 : MonoBehaviour
         UpdateSingleWheel(FRWheelCollider, FRWheelTransform);
         UpdateSingleWheel(BLWheelCollider, BLWheelTransform);
         UpdateSingleWheel(BRWheelCollider, BRWheelTransform);
+    }
+
+    private void ApplyDownforce()
+    {
+        rb.AddForce(-transform.up * downforceMultiplier * rb.velocity.magnitude); // Adds downforce based on speed
     }
 
     private void UpdateSingleWheel(WheelCollider wheelCollider, Transform wheelTransform)
