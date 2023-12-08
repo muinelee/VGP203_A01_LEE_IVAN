@@ -527,6 +527,7 @@ MonoBehaviour:
   motorForce: 1500
   brakeForce: 2500
   maxSteerAngle: 35
+  steerSpeed: 25
   maxSpeed: 150
   downforce: 25
   wheelColliders:

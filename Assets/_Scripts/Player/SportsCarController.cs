@@ -5,9 +5,11 @@ using UnityEngine;
 public class SportsCarController : MonoBehaviour
 {
     [Header("Performance Settings")]
-    public float motorForce = 2000f;
-    public float brakeForce = 4000f;
+    public float motorForce = 1500;
+    public float brakeForce = 2500f;
     public float maxSteerAngle = 35f;
+    private float currentSteerAngle = 0f;
+    public float steerSpeed = 25f;
     public float maxSpeed = 150.0f;
     public float downforce = 100f;
 
@@ -108,9 +110,10 @@ public class SportsCarController : MonoBehaviour
 
     private void HandleSteering()
     {
-        float steerAngle = maxSteerAngle * steerInput;
-        wheelColliders[0].steerAngle = steerAngle;
-        wheelColliders[1].steerAngle = steerAngle;
+        float targetSteerAngle = maxSteerAngle * steerInput;
+        currentSteerAngle = Mathf.Lerp(currentSteerAngle, targetSteerAngle, steerSpeed * Time.deltaTime);
+        wheelColliders[0].steerAngle = currentSteerAngle;
+        wheelColliders[1].steerAngle = currentSteerAngle;
     }
 
     private void UpdateWheelPoses()
