@@ -8,8 +8,8 @@ public class SportsCarController : MonoBehaviour
     public float motorForce = 1500;
     public float brakeForce = 2500f;
     public float maxSteerAngle = 35f;
+    public float steerSpeed = 35f;
     private float currentSteerAngle = 0f;
-    public float steerSpeed = 25f;
     public float maxSpeed = 150.0f;
     public float downforce = 100f;
 
